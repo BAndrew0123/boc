@@ -1,4 +1,4 @@
-# Body of Christ Centre (BOC) Web Application & Desktop Admin Panel
+# Body of Christ Centre (BOC) Web Application 
 
 A secure, full-stack application built for **Body of Christ Centre (Limuru, Kenya)** with interactive donation processing (M-Pesa STK Push simulation, Paybill, Card processing), community activity tracking, children sponsorship & development project management, and an **Isolated Standalone Desktop Admin Application** for staff.
 

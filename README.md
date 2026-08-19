@@ -9,7 +9,6 @@ A secure, full-stack application built for **Body of Christ Centre (Limuru, Keny
 To prevent brute-force attacks, credential stuffing, and unauthorized web login attempts, **the public web application contains ZERO admin login pages or web admin routes**.
 
 * **Public Web Portal (`app.py`)**: Runs strictly public-facing pages and donation API endpoints.
-* **Staff Control Panel (`admin_app.py`)**: Runs as a **Standalone Desktop GUI Application** on authorized staff computers, directly managing the database and exporting CSV ledgers locally.
 
 ---
 
@@ -29,8 +28,7 @@ To prevent brute-force attacks, credential stuffing, and unauthorized web login 
 
 ---
 
-### 2. **Standalone Desktop Admin App (`python admin_app.py`)**
-* **Security Passcode Prompt**: Asks for staff passcode on launch (`admin123`).
+### 2. **Standalone Desktop Admin App **
 * **Financial Summary Dashboard**: KPI cards for Total Raised, M-Pesa Total, Card Total, Volunteers, Children Tracked.
 * **Donations Ledger**: Search & filter by donor name, phone number, M-Pesa code, or cause; view status and timestamps.
 * **One-Click CSV Export**: Download `boc_donations_ledger.csv` directly to the staff computer.

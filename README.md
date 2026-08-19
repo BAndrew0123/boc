@@ -54,12 +54,7 @@ python app.py
 ```
 * Open [http://localhost:5000](http://localhost:5000) in your browser.
 
-### 3. **Launch the Staff Desktop Admin Panel**
-In a new terminal window or on a staff computer:
-```bash
 
-
----
 
 ## 📁 Project Structure
 

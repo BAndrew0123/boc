@@ -57,9 +57,7 @@ python app.py
 ### 3. **Launch the Staff Desktop Admin Panel**
 In a new terminal window or on a staff computer:
 ```bash
-python admin_app.py
-```
-* **Staff Passcode**: `admin123`
+
 
 ---
 

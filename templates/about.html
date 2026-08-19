@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us | Body of Christ Centre Limuru{% endblock %}
+
+{% block content %}
+<!-- Page Title Header -->
+<div class="bg-slate-900 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+        <span class="text-brand font-bold text-xs uppercase tracking-widest">Who We Are</span>
+        <h1 class="text-4xl font-extrabold">About Body of Christ Centre</h1>
+        <p class="text-slate-400 text-sm max-w-xl mx-auto">Discovering our 20+ year journey of faith, compassion, and empowering orphaned & vulnerable children in Limuru, Kenya.</p>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+    <!-- Story Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6">
+            <h2 class="text-3xl font-extrabold text-slate-900">Our Founder & History</h2>
+            <p class="text-slate-600 leading-relaxed text-sm">
+                Body of Christ Center was founded in <strong>2004 by Pastor Mary Watare Mbugua</strong>. Driven by a divine vision and a deeply compassionate heart following a tragic personal loss, Pastor Mary dedicated her life to opening a sanctuary for orphans, street children, and vulnerable youths in Limuru.
+            </p>
+            <p class="text-slate-600 leading-relaxed text-sm">
+                What began as a modest shelter with a handful of children has grown into a vibrant residential boarding center caring for <strong>160 children</strong>. We provide comprehensive nutrition, spiritual guidance, health screenings, and complete primary, secondary, and tertiary educational sponsorships.
+            </p>
+        </div>
+        <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200">
+            <img src="https://bodyofchristcentre.co.ke/wp-content/uploads/2024/02/WhatsApp-Image-2024-02-02-at-10.26.36_ee571a28.jpg" alt="Pastor Mary Mbugua" class="w-full h-auto">
+        </div>
+    </div>
+
+    <!-- Mission & Vision Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-orange-100 text-brand flex items-center justify-center text-xl font-bold">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <h3 class="font-extrabold text-xl text-slate-900">Our Mission</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                To provide holistic care, quality education, psychological support, and a nurturing family environment that empowers vulnerable children to reach their highest potential.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-orange-100 text-brand flex items-center justify-center text-xl font-bold">
+                <i class="fas fa-eye"></i>
+            </div>
+            <h3 class="font-extrabold text-xl text-slate-900">Our Vision</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                A world where every orphaned and vulnerable child experiences God's love, receives quality education, and thrives as a productive, dignified leader in society.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-orange-100 text-brand flex items-center justify-center text-xl font-bold">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="font-extrabold text-xl text-slate-900">Core Values</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Unconditional Love, Integrity & Stewardship, Academic Excellence, Spiritual Growth, and Community Advocacy.
+            </p>
+        </div>
+    </div>
+
+    <!-- Location & Facilities -->
+    <div class="bg-slate-900 text-white rounded-3xl p-10 md:p-14 space-y-6">
+        <div class="max-w-2xl space-y-3">
+            <span class="text-brand font-bold text-xs uppercase tracking-widest">Our Location</span>
+            <h2 class="text-3xl font-extrabold">Mutarakwa Village, Limuru</h2>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                Nestled in the serene highlands of Limuru, Kiambu County, our facility includes children's dormitories, dining halls, study classrooms, a computer lab, an organic vegetable farm, and a community hall.
+            </p>
+        </div>
+        <div class="pt-4">
+            <a href="{{ url_for('contact_page') }}" class="bg-brand hover:bg-brand-dark text-white font-bold px-6 py-3 rounded-full text-sm inline-flex items-center gap-2">
+                <i class="fas fa-map-marked-alt"></i> Plan a Visit / Get Directions
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Media Gallery | Body of Christ Centre Limuru{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="bg-slate-900 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+        <span class="text-brand font-bold text-xs uppercase tracking-widest">Visual Impact</span>
+        <h1 class="text-4xl font-extrabold">Photo & Media Gallery</h1>
+        <p class="text-slate-400 text-sm max-w-xl mx-auto">Moments of joy, learning, worship, and community care at Body of Christ Centre.</p>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Gallery Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        {% for img in images %}
+        <div class="group relative bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer" onclick="openLightbox('{{ img.image_url }}', '{{ img.title }}', '{{ img.caption }}')">
+            <div class="aspect-4/3 overflow-hidden">
+                <img src="{{ img.image_url }}" alt="{{ img.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+            </div>
+            <div class="p-4 bg-white">
+                <span class="text-xs font-bold text-brand uppercase">{{ img.category }}</span>
+                <h4 class="font-bold text-slate-900 text-sm mt-0.5">{{ img.title }}</h4>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl relative border border-slate-800">
+        <button onclick="document.getElementById('lightbox-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white z-10 text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="max-h-[70vh] overflow-hidden bg-black flex items-center justify-center">
+            <img id="lightbox-img" src="" alt="" class="max-h-[70vh] w-auto object-contain">
+        </div>
+        <div class="p-6 text-white space-y-1">
+            <h3 id="lightbox-title" class="text-xl font-bold"></h3>
+            <p id="lightbox-caption" class="text-xs text-slate-400"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+function openLightbox(url, title, caption) {
+    document.getElementById('lightbox-img').src = url;
+    document.getElementById('lightbox-title').textContent = title;
+    document.getElementById('lightbox-caption').textContent = caption || '';
+    document.getElementById('lightbox-modal').classList.remove('hidden');
+}
+</script>
+{% endblock %}

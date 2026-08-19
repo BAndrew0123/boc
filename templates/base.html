@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Body of Christ Centre | Transforming Lives Through Love & Education{% endblock %}</title>
+
+    <!-- OpenGraph & WhatsApp Social Share Meta Tags -->
+    <meta property="og:title" content="Body of Christ Centre Limuru — Transforming Lives">
+    <meta property="og:description" content="Sanctuary of hope providing holistic residential care, education, and university pathways for 160 orphaned and vulnerable children in Limuru, Kenya.">
+    <meta property="og:image" content="https://bodyofchristcentre.co.ke/wp-content/uploads/2024/01/event-2.jpg">
+    <meta property="og:url" content="https://bodyofchristcentre.co.ke/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Body of Christ Centre Limuru">
+    <meta name="twitter:description" content="Empowering 160 vulnerable children through shelter, food, healthcare, and education in Limuru.">
+    <meta name="twitter:image" content="https://bodyofchristcentre.co.ke/wp-content/uploads/2024/01/event-2.jpg">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#df5311',
+                            dark: '#c2410c',
+                            light: '#fdba74',
+                            50: '#fff7ed',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased relative">
+
+    <!-- Top Bar Header -->
+    <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-6">
+                <span class="flex items-center gap-1.5"><i class="fas fa-map-marker-alt text-brand"></i> Mutarakwa Village, Limuru, Kenya</span>
+                <span class="flex items-center gap-1.5"><i class="fas fa-envelope text-brand"></i> info@bodyofchristcentre.co.ke</span>
+                <span class="hidden sm:flex items-center gap-1.5"><i class="fas fa-phone-alt text-brand"></i> +254 720 403647</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://facebook.com/bodyofchristcentre" target="_blank" class="hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://twitter.com/bodyofchristke" target="_blank" class="hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/bodyofchristke" target="_blank" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                
+                <!-- Instant Language Switcher (English / Swahili) -->
+                <div class="ml-4 flex items-center gap-1.5 text-[11px] bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+                    <i class="fas fa-globe text-brand"></i>
+                    <button onclick="switchLanguage('en')" id="btn-lang-en" class="font-extrabold text-white hover:text-brand">English</button>
+                    <span class="text-slate-600">|</span>
+                    <button onclick="switchLanguage('sw')" id="btn-lang-sw" class="font-bold text-slate-400 hover:text-brand">Kiswahili</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-sm border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <!-- Brand Logo -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('home') }}" class="flex items-center gap-3">
+                        <img src="https://bodyofchristcentre.co.ke/wp-content/uploads/2023/12/logo1.png" alt="Body of Christ Centre Logo" class="h-12 w-auto object-contain">
+                        <div class="flex flex-col">
+                            <span class="font-extrabold text-xl tracking-tight text-slate-900 leading-tight">BODY OF CHRIST</span>
+                            <span class="text-xs font-semibold text-brand tracking-widest uppercase">Children's Home & Centre</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                    <a href="{{ url_for('home') }}" class="hover:text-brand transition py-2 border-b-2 border-transparent hover:border-brand">Home</a>
+                    <a href="{{ url_for('about') }}" class="hover:text-brand transition py-2 border-b-2 border-transparent hover:border-brand">About Us</a>
+                    <a href="{{ url_for('activities_page') }}" class="hover:text-brand transition py-2 border-b-2 border-transparent hover:border-brand">Activities & Events</a>
+                    <a href="{{ url_for('children_page') }}" class="hover:text-brand transition py-2 border-b-2 border-transparent hover:border-brand">Children & Projects</a>
+                    <a href="{{ url_for('gallery_page') }}" class="hover:text-brand transition py-2 border-b-2 border-transparent hover:border-brand">Gallery</a>
+                    <a href="{{ url_for('contact_page') }}" class="hover:text-brand transition py-2 border-b-2 border-transparent hover:border-brand">Contact Us</a>
+                </div>
+
+                <!-- Donate Header Button -->
+                <div class="hidden md:flex items-center">
+                    <a href="{{ url_for('donate_page') }}" class="bg-brand hover:bg-brand-dark text-white font-bold px-6 py-3 rounded-full shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                        <i class="fas fa-heart text-amber-300"></i> DONATE NOW
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex md:hidden items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3">
+            <a href="{{ url_for('home') }}" class="block text-slate-700 hover:text-brand font-medium py-2">Home</a>
+            <a href="{{ url_for('about') }}" class="block text-slate-700 hover:text-brand font-medium py-2">About Us</a>
+            <a href="{{ url_for('activities_page') }}" class="block text-slate-700 hover:text-brand font-medium py-2">Activities & Events</a>
+            <a href="{{ url_for('children_page') }}" class="block text-slate-700 hover:text-brand font-medium py-2">Children & Projects</a>
+            <a href="{{ url_for('gallery_page') }}" class="block text-slate-700 hover:text-brand font-medium py-2">Gallery</a>
+            <a href="{{ url_for('contact_page') }}" class="block text-slate-700 hover:text-brand font-medium py-2">Contact Us</a>
+            <div class="pt-2">
+                <a href="{{ url_for('donate_page') }}" class="block text-center bg-brand text-white font-bold py-3 rounded-xl shadow">
+                    <i class="fas fa-heart mr-1"></i> DONATE NOW
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Alert Messages -->
+    <div class="max-w-7xl mx-auto px-4 mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="p-4 rounded-xl mb-4 flex items-center justify-between shadow-sm {% if category == 'error' %}bg-rose-50 border border-rose-200 text-rose-800{% else %}bg-emerald-50 border border-emerald-200 text-emerald-800{% endif %}">
+                <div class="flex items-center gap-3">
+                    <i class="fas {% if category == 'error' %}fa-exclamation-circle text-rose-500{% else %}fa-check-circle text-emerald-500{% endif %} text-xl"></i>
+                    <span class="font-medium text-sm">{{ message }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Dynamic Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FLOATING QUICK CONTACT SPEED DIAL WIDGET -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 font-sans">
+        <!-- Floating Action Sub-Buttons -->
+        <div id="floating-contact-menu" class="flex flex-col items-center gap-3 transition-all duration-300 transform origin-bottom scale-0 opacity-0 pointer-events-none">
+            
+            <!-- Direct Phone Call -->
+            <a href="tel:+254720403647" title="Call Us Directly (+254 720 403 647)" class="w-13 h-13 p-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-xl flex items-center justify-center text-xl transition transform hover:scale-110 border-2 border-white">
+                <i class="fas fa-phone-alt"></i>
+            </a>
+            
+            <!-- WhatsApp Chat Direct -->
+            <a href="https://wa.me/254720403647?text=Hello%20Body%20of%20Christ%20Centre,%20I%20would%20like%20to%20inquire%20about%20supporting%20the%20children." target="_blank" title="Chat on WhatsApp" class="w-13 h-13 p-3 rounded-full bg-emerald-400 hover:bg-emerald-500 text-white shadow-xl flex items-center justify-center text-2xl transition transform hover:scale-110 border-2 border-white">
+                <i class="fab fa-whatsapp text-2xl"></i>
+            </a>
+            
+            <!-- Direct Email Envelope -->
+            <a href="mailto:info@bodyofchristcentre.co.ke" title="Send Email Inquiry" class="w-13 h-13 p-3.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white shadow-xl flex items-center justify-center text-xl transition transform hover:scale-110 border-2 border-white">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+
+        <!-- Main Toggle Floating Button -->
+        <button onclick="toggleFloatingContact()" id="floating-toggle-btn" class="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-2xl flex items-center justify-center text-2xl transition transform hover:scale-105 border-2 border-white relative group">
+            <i id="floating-toggle-icon" class="fas fa-comments"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 pt-16 pb-8 border-t border-slate-900 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+                <!-- Column 1: Brand Info -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <img src="https://bodyofchristcentre.co.ke/wp-content/uploads/2023/12/logo1.png" alt="Logo" class="h-10 bg-white p-1 rounded">
+                        <span class="text-lg font-bold text-white tracking-wide">BODY OF CHRIST</span>
+                    </div>
+                    <p class="text-sm leading-relaxed text-slate-400">
+                        Body of Christ Centre is a compassionate home dedicated to providing holistic care, quality education, and a nurturing environment for 160 vulnerable children in Limuru, Kenya.
+                    </p>
+                    <div class="flex space-x-3 pt-2">
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand text-white flex items-center justify-center transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand text-white flex items-center justify-center transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand text-white flex items-center justify-center transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand text-white flex items-center justify-center transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h3 class="text-white font-semibold mb-4 text-base tracking-wide border-l-2 border-brand pl-3">Quick Links</h3>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ url_for('about') }}" class="hover:text-brand transition"><i class="fas fa-chevron-right text-xs text-brand mr-2"></i>About Our Founder</a></li>
+                        <li><a href="{{ url_for('activities_page') }}" class="hover:text-brand transition"><i class="fas fa-chevron-right text-xs text-brand mr-2"></i>Upcoming Events</a></li>
+                        <li><a href="{{ url_for('children_page') }}" class="hover:text-brand transition"><i class="fas fa-chevron-right text-xs text-brand mr-2"></i>Sponsor a Child</a></li>
+                        <li><a href="{{ url_for('gallery_page') }}" class="hover:text-brand transition"><i class="fas fa-chevron-right text-xs text-brand mr-2"></i>Media Gallery</a></li>
+                        <li><a href="{{ url_for('contact_page') }}" class="hover:text-brand transition"><i class="fas fa-chevron-right text-xs text-brand mr-2"></i>Get In Touch</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Causes & Support -->
+                <div>
+                    <h3 class="text-white font-semibold mb-4 text-base tracking-wide border-l-2 border-brand pl-3">Ways to Give</h3>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ url_for('donate_page') }}" class="hover:text-brand transition"><i class="fas fa-mobile-alt text-emerald-400 mr-2"></i>M-Pesa Paybill 400200</a></li>
+                        <li><a href="{{ url_for('donate_page') }}" class="hover:text-brand transition"><i class="fas fa-credit-card text-sky-400 mr-2"></i>Card & Bank Payment</a></li>
+                        <li><a href="{{ url_for('donate_page') }}" class="hover:text-brand transition"><i class="fas fa-graduation-cap text-amber-400 mr-2"></i>High School & College Fund</a></li>
+                        <li><a href="{{ url_for('donate_page') }}" class="hover:text-brand transition"><i class="fas fa-home text-purple-400 mr-2"></i>Dormitory Renovation</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Location & Contact -->
+                <div>
+                    <h3 class="text-white font-semibold mb-4 text-base tracking-wide border-l-2 border-brand pl-3">Contact Information</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt text-brand mt-1"></i>
+                            <span>Mutarakwa Village, Limuru Sub-County, Kiambu County, Kenya</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone-alt text-brand"></i>
+                            <span>+254 720 403 647 / 0720 403647</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-envelope text-brand"></i>
+                            <span>info@bodyofchristcentre.co.ke</span>
+                        </li>
+                        <li class="flex items-center gap-3 pt-2">
+                            <span class="bg-slate-800 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300">
+                                M-Pesa Paybill: <strong>400200</strong> | Acc: <strong>BOC</strong>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright & Policies -->
+            <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+                <p>&copy; 2026 Body of Christ Centre. All Rights Reserved. Transforming Lives with Love.</p>
+                <div class="flex space-x-6">
+                    <a href="{{ url_for('privacy') }}" class="hover:text-slate-300 transition">Privacy Policy</a>
+                    <a href="{{ url_for('terms') }}" class="hover:text-slate-300 transition">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+    function toggleFloatingContact() {
+        const menu = document.getElementById('floating-contact-menu');
+        const icon = document.getElementById('floating-toggle-icon');
+        const btn = document.getElementById('floating-toggle-btn');
+        
+        if (menu.classList.contains('scale-0')) {
+            menu.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
+            menu.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+            icon.className = "fas fa-times text-xl";
+            btn.classList.remove('bg-indigo-600');
+            btn.classList.add('bg-slate-800');
+        } else {
+            menu.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+            menu.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+            icon.className = "fas fa-comments";
+            btn.classList.remove('bg-slate-800');
+            btn.classList.add('bg-indigo-600');
+        }
+    }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

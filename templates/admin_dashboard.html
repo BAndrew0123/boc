@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | Body of Christ Centre Limuru{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js CDN for financial analytics -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Top Header Bar -->
+<div class="bg-slate-900 text-white py-8 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <span class="text-brand font-bold text-xs uppercase tracking-widest">Management Control Panel</span>
+            <h1 class="text-3xl font-extrabold flex items-center gap-3">
+                <i class="fas fa-chart-line text-brand"></i> Admin Dashboard
+            </h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ url_for('admin_export_csv') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow transition flex items-center gap-2">
+                <i class="fas fa-file-csv text-sm"></i> Export Donations CSV
+            </a>
+            <a href="{{ url_for('admin_logout') }}" class="bg-slate-800 hover:bg-rose-900 text-rose-300 font-bold px-4 py-2.5 rounded-xl text-xs transition border border-slate-700">
+                <i class="fas fa-sign-out-alt mr-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+    <!-- KPI Summary Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Raised</div>
+            <div class="text-2xl font-extrabold text-brand">KES {{ "{:,.0f}".format(total_raised) }}</div>
+            <div class="text-[11px] text-emerald-600 font-semibold"><i class="fas fa-check-circle mr-1"></i> Live Ledger Total</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">M-Pesa Total</div>
+            <div class="text-2xl font-extrabold text-emerald-600">KES {{ "{:,.0f}".format(mpesa_raised) }}</div>
+            <div class="text-[11px] text-slate-500">STK + Paybill</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Card Payments</div>
+            <div class="text-2xl font-extrabold text-sky-600">KES {{ "{:,.0f}".format(card_raised) }}</div>
+            <div class="text-[11px] text-slate-500">Visa / Mastercard</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Volunteers</div>
+            <div class="text-2xl font-extrabold text-purple-600">{{ volunteer_count }}</div>
+            <div class="text-[11px] text-slate-500">Registered Supporters</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Children Tracked</div>
+            <div class="text-2xl font-extrabold text-slate-900">{{ children_count }}</div>
+            <div class="text-[11px] text-slate-500">High School & College</div>
+        </div>
+    </div>
+
+    <!-- Analytics Chart & Quick Action Buttons -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Donation Breakdown Chart -->
+        <div class="md:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-base">Payment Method Distribution (M-Pesa vs Card)</h3>
+            <div class="h-64">
+                <canvas id="paymentChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Admin Actions Panel -->
+        <div class="bg-slate-900 text-white p-6 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <h3 class="font-extrabold text-lg text-white border-l-4 border-brand pl-3">Quick Management Actions</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Add offline cash donations, publish new volunteer activities, or add sponsored children profiles.</p>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="document.getElementById('modal-offline-donation').classList.remove('hidden')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                    <i class="fas fa-plus-circle"></i> Record Cash / Offline Donation
+                </button>
+                <button onclick="document.getElementById('modal-add-activity').classList.remove('hidden')" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                    <i class="fas fa-calendar-plus"></i> Create New Event / Activity
+                </button>
+                <button onclick="document.getElementById('modal-add-project').classList.remove('hidden')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-slate-700">
+                    <i class="fas fa-user-plus"></i> Add Child or Project Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Recent Donations Ledger Table -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h3 class="font-extrabold text-slate-900 text-lg">Live Donations Ledger</h3>
+                <p class="text-xs text-slate-500">Real-time M-Pesa STK, Paybill, and Card transactions.</p>
+            </div>
+            <div>
+                <input type="text" id="donationSearch" onkeyup="filterDonationsTable()" placeholder="Search donor, M-Pesa code, cause..." class="px-4 py-2 text-xs rounded-xl border border-slate-300 w-64 focus:ring-2 focus:ring-brand">
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="donationsTable" class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                        <th class="py-3 px-4">Ref Code</th>
+                        <th class="py-3 px-4">Donor Name</th>
+                        <th class="py-3 px-4">Phone / Email</th>
+                        <th class="py-3 px-4">Amount (KES)</th>
+                        <th class="py-3 px-4">Method</th>
+                        <th class="py-3 px-4">Cause / Target</th>
+                        <th class="py-3 px-4">Date</th>
+                        <th class="py-3 px-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for d in recent_donations %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3.5 px-4 font-mono font-bold text-slate-900">{{ d.mpesa_code or 'CARD-' ~ d.id }}</td>
+                        <td class="py-3.5 px-4 font-semibold text-slate-800">{{ d.donor_name }}</td>
+                        <td class="py-3.5 px-4 text-slate-500">{{ d.donor_phone }} {% if d.donor_email %}({{ d.donor_email }}){% endif %}</td>
+                        <td class="py-3.5 px-4 font-extrabold text-emerald-600">KES {{ "{:,.2f}".format(d.amount) }}</td>
+                        <td class="py-3.5 px-4">
+                            <span class="px-2.5 py-1 rounded-full font-bold text-[10px] {% if 'MPESA' in d.payment_method %}bg-emerald-100 text-emerald-800{% else %}bg-sky-100 text-sky-800{% endif %}">
+                                {{ d.payment_method }}
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-700">{{ d.cause_title }}</td>
+                        <td class="py-3.5 px-4 text-slate-400">{{ d.created_at }}</td>
+                        <td class="py-3.5 px-4">
+                            <span class="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px]">
+                                {{ d.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 2: Manage Activities & Events -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex justify-between items-center">
+            <h3 class="font-extrabold text-slate-900 text-lg">Published Activities & Volunteer Events</h3>
+            <button onclick="document.getElementById('modal-add-activity').classList.remove('hidden')" class="bg-brand text-white font-bold px-4 py-2 rounded-xl text-xs">
+                + New Event
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for act in activities %}
+            <div class="border border-slate-200 rounded-2xl p-4 flex justify-between items-center text-xs">
+                <div class="space-y-1">
+                    <span class="font-bold text-brand uppercase text-[10px]">{{ act.category }}</span>
+                    <h4 class="font-bold text-slate-900 text-sm">{{ act.title }}</h4>
+                    <p class="text-slate-500"><i class="far fa-calendar mr-1"></i> {{ act.event_date }} | <i class="fas fa-users mr-1"></i> {{ act.registered_volunteers }} Signups</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('admin_delete_activity', activity_id=act.id) }}" onclick="return confirm('Remove this activity?')" class="text-rose-600 hover:text-rose-800 font-bold p-2">
+                        <i class="fas fa-trash-alt text-base"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Section 3: Contact Messages Inbox -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <h3 class="font-extrabold text-slate-900 text-lg">Contact Inquiries & Messages</h3>
+        <div class="divide-y divide-slate-100 text-xs">
+            {% for msg in messages %}
+            <div class="py-3 space-y-1">
+                <div class="flex justify-between font-bold text-slate-900">
+                    <span>{{ msg.name }} ({{ msg.email }} / {{ msg.phone }})</span>
+                    <span class="text-slate-400 font-normal">{{ msg.created_at }}</span>
+                </div>
+                <div class="text-brand font-semibold">{{ msg.subject }}</div>
+                <p class="text-slate-600">{{ msg.message }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL 1: Add Offline Donation -->
+<div id="modal-offline-donation" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-4 relative">
+        <button onclick="document.getElementById('modal-offline-donation').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        <h3 class="font-extrabold text-slate-900 text-lg">Record Cash / Bank Donation</h3>
+        <form action="{{ url_for('admin_add_offline_donation') }}" method="POST" class="space-y-3 text-xs">
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Donor Name</label>
+                <input type="text" name="donor_name" required placeholder="e.g. Local Church Assembly" class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Donor Phone Number</label>
+                <input type="tel" name="donor_phone" placeholder="07..." class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Amount (KES)</label>
+                <input type="number" name="amount" required min="1" class="w-full p-2.5 border rounded-xl font-bold text-brand text-sm">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Payment Type</label>
+                <select name="payment_method" class="w-full p-2.5 border rounded-xl bg-white">
+                    <option value="OFFLINE">Cash Donation</option>
+                    <option value="BANK_TRANSFER">Direct Bank Wire</option>
+                    <option value="CHEQUE">Bank Cheque</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Cause / Target</label>
+                <input type="text" name="cause_title" value="General Children Care & Nutrition" class="w-full p-2.5 border rounded-xl">
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl shadow">
+                SAVE OFFLINE DONATION
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL 2: Create Activity -->
+<div id="modal-add-activity" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-4 relative">
+        <button onclick="document.getElementById('modal-add-activity').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        <h3 class="font-extrabold text-slate-900 text-lg">Create New Activity / Event</h3>
+        <form action="{{ url_for('admin_add_activity') }}" method="POST" class="space-y-3 text-xs">
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Event Title</label>
+                <input type="text" name="title" required placeholder="e.g. Christmas Gift Drive" class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Category</label>
+                <select name="category" class="w-full p-2.5 border rounded-xl bg-white">
+                    <option value="Education">Education</option>
+                    <option value="Health">Health</option>
+                    <option value="Community Outreach">Community Outreach</option>
+                    <option value="Spiritual">Spiritual</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Event Date</label>
+                <input type="date" name="event_date" required class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Location</label>
+                <input type="text" name="location" required value="Body of Christ Centre, Limuru" class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Description</label>
+                <textarea name="description" rows="3" required class="w-full p-2.5 border rounded-xl"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-brand text-white font-bold py-3 rounded-xl shadow">
+                PUBLISH ACTIVITY
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL 3: Add Child / Project -->
+<div id="modal-add-project" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-4 relative">
+        <button onclick="document.getElementById('modal-add-project').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        <h3 class="font-extrabold text-slate-900 text-lg">Add Child or Project Profile</h3>
+        <form action="{{ url_for('admin_add_project') }}" method="POST" class="space-y-3 text-xs">
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Name</label>
+                <input type="text" name="name" required placeholder="Child Name or Project Name" class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Type</label>
+                <select name="type" class="w-full p-2.5 border rounded-xl bg-white">
+                    <option value="Child">Child Student</option>
+                    <option value="Project">Infrastructure Project</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Academic Year / Subtitle</label>
+                <input type="text" name="age_or_year" placeholder="e.g. University Year 1" class="w-full p-2.5 border rounded-xl">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Target Amount (KES)</label>
+                <input type="number" name="target_amount" min="0" value="100000" class="w-full p-2.5 border rounded-xl font-bold text-brand">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Description</label>
+                <textarea name="description" rows="3" required class="w-full p-2.5 border rounded-xl"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl shadow">
+                ADD PROFILE
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Filter Donations Table
+function filterDonationsTable() {
+    const input = document.getElementById("donationSearch").value.toUpperCase();
+    const trs = document.getElementById("donationsTable").getElementsByTagName("tr");
+    for (let i = 1; i < trs.length; i++) {
+        let text = trs[i].textContent || trs[i].innerText;
+        trs[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+    }
+}
+
+// Render Chart.js Analytics Graph
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('paymentChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['M-Pesa STK & Paybill', 'Credit / Debit Card'],
+            datasets: [{
+                data: [{{ mpesa_raised }}, {{ card_raised }}],
+                backgroundColor: ['#10b981', '#0284c7'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
